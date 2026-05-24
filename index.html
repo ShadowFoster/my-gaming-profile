@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Player Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: rgba(255,255,255,0.07);
+    --accent: #00e5ff;
+    --accent2: #ff4d6d;
+    --gold: #ffd166;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --green: #00e676;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 2.5rem; }
+  .handle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+  .name {
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: #fff;
+  }
+  .name span { color: var(--accent); }
+  .tagline {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+    margin-top: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  /* Divider */
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 1.75rem 0;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), var(--accent), var(--border), transparent);
+  }
+  .divider-icon { color: var(--accent); font-size: 11px; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; white-space: nowrap; }
+
+  /* Section card */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .section-icon.rp  { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); }
+  .section-icon.val { background: rgba(255,77,109,0.1); border: 1px solid rgba(255,77,109,0.2); }
+  .section-icon.bgmi{ background: rgba(255,209,102,0.1); border: 1px solid rgba(255,209,102,0.2); }
+
+  .section-label { flex: 1; }
+  .section-label h2 { font-size: 17px; font-weight: 700; letter-spacing: 0.04em; color: #fff; }
+  .section-label p  { font-size: 12px; color: var(--muted); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.06em; }
+
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease infinite;
+  }
+  .status-dot.inactive { background: var(--muted); box-shadow: none; animation: none; }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+
+  /* Roles */
+  .roles { padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 8px; }
+
+  .role-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .role-item:hover { border-color: rgba(0,229,255,0.2); background: rgba(0,229,255,0.04); }
+
+  .org-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .org-ng    { background: rgba(0,229,255,0.12); color: var(--accent); border: 1px solid rgba(0,229,255,0.25); }
+  .org-fib   { background: rgba(255,209,102,0.12); color: var(--gold); border: 1px solid rgba(255,209,102,0.25); }
+  .org-sahp  { background: rgba(100,180,255,0.12); color: #64b4ff; border: 1px solid rgba(100,180,255,0.25); }
+  .org-lspd  { background: rgba(80,160,255,0.12); color: #50a0ff; border: 1px solid rgba(80,160,255,0.25); }
+  .org-gov   { background: rgba(200,180,255,0.12); color: #c8b4ff; border: 1px solid rgba(200,180,255,0.25); }
+  .org-li    { background: rgba(255,120,70,0.12); color: #ff7846; border: 1px solid rgba(255,120,70,0.25); }
+  .org-vagos { background: rgba(255,77,109,0.12); color: var(--accent2); border: 1px solid rgba(255,77,109,0.25); }
+  .org-fam   { background: rgba(0,230,118,0.12); color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
+
+  .role-name { flex: 1; font-size: 14px; font-weight: 500; color: var(--text); }
+  .ex-flag {
+    font-size: 10px; font-family: 'Share Tech Mono', monospace;
+    color: var(--muted); letter-spacing: 0.08em;
+    padding: 1px 6px; border: 1px solid var(--border); border-radius: 3px;
+  }
+  .count-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; color: var(--gold);
+    background: rgba(255,209,102,0.08);
+    border: 1px solid rgba(255,209,102,0.2);
+    border-radius: 4px; padding: 1px 8px;
+    flex-shrink: 0;
+  }
+
+  /* Squad */
+  .squad-section { padding: 1rem 1.25rem; }
+  .squad-title {
+    font-size: 11px; color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.12em; margin-bottom: 10px;
+  }
+  .squad-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .squad-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px 6px 8px;
+    transition: border-color 0.2s;
+  }
+  .squad-pill:hover { border-color: rgba(0,229,255,0.3); }
+  .squad-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, #1a2540, #0d1625);
+    border: 1px solid rgba(0,229,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .squad-name { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  /* Coming soon */
+  .coming-soon {
+    padding: 1.5rem 1.25rem;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; letter-spacing: 0.08em;
+  }
+  .cs-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="handle">// PLAYER PROFILE</div>
+    <h1 class="name">EN2 <span>Player</span></h1>
+    <div class="tagline">GRAND RP &nbsp;·&nbsp; VALORANT &nbsp;·&nbsp; BGMI</div>
+  </div>
+
+  <div class="divider"><span class="divider-icon">◆ GRAND RP ◆</span></div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon rp">🎮</div>
+      <div class="section-label">
+        <h2>Grand RP</h2>
+        <p>EN2 SERVER · ACTIVE</p>
+      </div>
+      <div class="status-dot"></div>
+    </div>
+
+    <div class="roles">
+      <div class="role-item">
+        <span class="org-tag org-ng">NG</span>
+        <span class="role-name">Lt. General</span>
+        <span class="count-badge">×1</span>
+      </div>
+      <div class="role-item">
+        <span class="org-tag org-fib">FIB</span>
+        <span class="role-name">FIB Operations Director</span>
+        <span class="ex-flag">EX</span>
+        <span class="count-badge">×1</span>
+      </div>
+      <div class="role-item">
+        <span class="org-tag org-sahp">SAHP</span>
+        <span class="role-name">Under Sheriff</span>
+        <span class="count-badge">×2</span>
+      </div>
+      <div class="role-item">
+        <span class="org-tag org-lspd">LSPD</span>
+        <span class="role-name">ACP – HR</span>
+        <span class="count-badge">×5</span>
+      </div>
+      <div class="role-item">
+        <span class="org-tag org-gov">GOV</span>
+        <span class="role-name">Sr. Executive Staff</span>
+        <span class="ex-flag">EX</span>
+        <span class="count-badge">×1</span>
+      </div>
+      <div class="role-item">
+        <span class="org-tag org-li">LI</span>
+        <span class="role-name">Ads Team Junior</span>
+      </div>
+      <div class="role-item">
+        <span class="org-tag org-vagos">VAGOS</span>
+        <span class="role-name">Under Deputy</span>
+      </div>
+      <div class="role-item">
+        <span class="org-tag org-fam">FAMILIES</span>
+        <span class="role-name">Under Deputy</span>
+      </div>
+    </div>
+
+    <div class="squad-section">
+      <div class="squad-title">◆ SQUAD MEMBERS</div>
+      <div class="squad-list">
+        <div class="squad-pill">
+          <div class="squad-avatar">DA</div>
+          <span class="squad-name">DavidAkatsuki</span>
+        </div>
+        <div class="squad-pill">
+          <div class="squad-avatar">KV</div>
+          <span class="squad-name">KnightViking</span>
+        </div>
+        <div class="squad-pill">
+          <div class="squad-avatar">AS</div>
+          <span class="squad-name">AdityaaSsingh</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span class="divider-icon">◆ OTHER GAMES ◆</span></div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon val">🔫</div>
+      <div class="section-label">
+        <h2>Valorant</h2>
+        <p>COMPETITIVE PLAYER</p>
+      </div>
+      <div class="status-dot inactive"></div>
+    </div>
+    <div class="roles">
+      <div class="role-item">
+        <span class="org-tag org-vagos">RANK</span>
+        <span class="role-name">Max Rank Reached</span>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#c8b4ff;background:rgba(200,180,255,0.1);border:1px solid rgba(200,180,255,0.25);border-radius:4px;padding:2px 10px;">🥈 Platinum</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon bgmi">📱</div>
+      <div class="section-label">
+        <h2>BGMI</h2>
+        <p>BATTLEGROUNDS MOBILE INDIA</p>
+      </div>
+      <div class="status-dot inactive"></div>
+    </div>
+    <div class="roles">
+      <div class="role-item">
+        <span class="org-tag org-fib">RANK</span>
+        <span class="role-name">Max Rank Reached</span>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--gold);background:rgba(255,209,102,0.1);border:1px solid rgba(255,209,102,0.25);border-radius:4px;padding:2px 10px;">👑 Ace 3</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    PROFILE CARD &nbsp;·&nbsp; GRAND RP EN2
+  </div>
+
+</div>
+</body>
+</html>
