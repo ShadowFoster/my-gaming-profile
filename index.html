@@ -44,6 +44,11 @@
     background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
     clip-path:polygon(0 18px, 18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px));
     border:1px solid var(--line);
+    animation:borderGlow 4s ease-in-out infinite;
+  }
+  @keyframes borderGlow{
+    0%,100%{ box-shadow:0 0 18px rgba(40,229,255,0.10), 0 0 2px rgba(40,229,255,0.4); }
+    50%{ box-shadow:0 0 30px rgba(177,101,255,0.16), 0 0 2px rgba(177,101,255,0.5); }
   }
 
   .edge-glow{
@@ -52,6 +57,33 @@
     pointer-events:none;
     clip-path:polygon(0 18px, 18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px));
     box-shadow: inset 0 0 40px rgba(40,229,255,0.06);
+    overflow:hidden;
+    z-index:3;
+  }
+
+  .scanlines{
+    position:absolute;
+    inset:0;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(40,229,255,0.035) 0px,
+      rgba(40,229,255,0.035) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode:overlay;
+  }
+
+  .sweep{
+    position:absolute;
+    left:0; right:0;
+    height:70px;
+    background:linear-gradient(to bottom, transparent, rgba(40,229,255,0.10), transparent);
+    animation:sweep 5s linear infinite;
+  }
+  @keyframes sweep{
+    0%{ top:-70px; }
+    100%{ top:100%; }
   }
 
   .topbar{
@@ -114,6 +146,16 @@
     background-clip:text;
     color:transparent;
     text-transform:uppercase;
+    position:relative;
+    display:inline-block;
+    animation:flicker 5s infinite;
+  }
+  @keyframes flicker{
+    0%,94%,100%{ opacity:1; filter:none; }
+    95%{ opacity:0.5; filter:blur(0.5px); }
+    96%{ opacity:1; transform:translateX(-1px); }
+    97%{ opacity:0.7; transform:translateX(1px); }
+    98%{ opacity:1; transform:translateX(0); }
   }
   .title-line{
     font-size:13px;
@@ -145,7 +187,13 @@
     height:100%;
     width:92%;
     background:linear-gradient(90deg, var(--cyan), var(--violet));
+    background-size:200% 100%;
     box-shadow:0 0 10px var(--cyan);
+    animation:shimmer 3s linear infinite;
+  }
+  @keyframes shimmer{
+    0%{ background-position:0% 0; }
+    100%{ background-position:200% 0; }
   }
 
   .stats-title{
@@ -171,6 +219,12 @@
     border:1px solid var(--line);
     border-left:3px solid var(--accent, var(--cyan));
     clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 8px);
+    transition:background .2s ease, transform .15s ease, box-shadow .2s ease;
+  }
+  .stat-row:hover{
+    background:rgba(255,255,255,0.05);
+    transform:translateX(3px);
+    box-shadow:0 0 14px -4px var(--accent, var(--cyan));
   }
   .stat-row .badge{
     font-family:'Orbitron', sans-serif;
@@ -249,7 +303,10 @@
 <body>
 
 <div class="card">
-  <div class="edge-glow"></div>
+  <div class="edge-glow">
+    <div class="scanlines"></div>
+    <div class="sweep"></div>
+  </div>
 
   <div class="topbar">
     <div class="live"><span class="dot"></span>ONLINE</div>
@@ -272,11 +329,11 @@
     <div class="stat-row" style="--accent:var(--gold);"><span class="badge">x1</span><span class="role">Lt. General</span><span class="org">NG</span></div>
     <div class="stat-row" style="--accent:var(--cyan);"><span class="badge">x2</span><span class="role">Under Sheriff</span><span class="org">SAHP</span></div>
     <div class="stat-row" style="--accent:var(--cyan);"><span class="badge">x1</span><span class="role">Deputy Chief of Police</span><span class="org">LSPD</span></div>
-    <div class="stat-row" style="--accent:var(--violet);"><span class="badge">EX</span><span class="role">Operations Director</span><span class="org">FIB</span></div>
-    <div class="stat-row" style="--accent:var(--violet);"><span class="badge">EX</span><span class="role">Sr. Executive Staff</span><span class="org">GOV</span></div>
-    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">JR</span><span class="role">ADS Team Junior</span><span class="org">LI</span></div>
-    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">UD</span><span class="role">Under Deputy</span><span class="org">VAGOS</span></div>
-    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">UD</span><span class="role">Under Deputy</span><span class="org">FAMILIES</span></div>
+    <div class="stat-row" style="--accent:var(--violet);"><span class="badge">x1</span><span class="role">Operations Director</span><span class="org">FIB</span></div>
+    <div class="stat-row" style="--accent:var(--violet);"><span class="badge">x1</span><span class="role">Sr. Executive Staff</span><span class="org">GOV</span></div>
+    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">x1</span><span class="role">ADS Team Junior</span><span class="org">LI</span></div>
+    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">x1</span><span class="role">Under Deputy</span><span class="org">VAGOS</span></div>
+    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">x1</span><span class="role">Under Deputy</span><span class="org">FAMILIES</span></div>
   </div>
 
   <div class="footer">
