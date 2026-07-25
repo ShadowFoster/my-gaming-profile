@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PLAYER PROFILE // SHADOW</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070d;
+    --panel:#0a0f1c;
+    --panel-2:#0d1428;
+    --cyan:#28e5ff;
+    --cyan-dim:#0f6f7e;
+    --violet:#b165ff;
+    --magenta:#ff2fa0;
+    --gold:#ffc93c;
+    --line:#1c2a44;
+    --text:#d8ecff;
+    --text-dim:#5f7896;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 20% 10%, rgba(40,229,255,0.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(177,101,255,0.08), transparent 45%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Rajdhani', sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+  }
+
+  .card{
+    position:relative;
+    width:100%;
+    max-width:580px;
+    background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    clip-path:polygon(0 18px, 18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px));
+    border:1px solid var(--line);
+  }
+
+  .edge-glow{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    clip-path:polygon(0 18px, 18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px));
+    box-shadow: inset 0 0 40px rgba(40,229,255,0.06);
+  }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 22px;
+    border-bottom:1px solid var(--line);
+    background:rgba(40,229,255,0.03);
+  }
+  .topbar .live{
+    font-family:'Orbitron', sans-serif;
+    font-size:10px;
+    letter-spacing:3px;
+    color:var(--cyan);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .live .dot{
+    width:7px; height:7px;
+    background:var(--cyan);
+    border-radius:50%;
+    box-shadow:0 0 8px var(--cyan);
+    animation:pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1; transform:scale(1);}
+    50%{opacity:0.4; transform:scale(0.8);}
+  }
+  .topbar .server{
+    font-size:11px;
+    letter-spacing:2px;
+    color:var(--text-dim);
+  }
+
+  .headline{
+    padding:26px 26px 10px;
+    text-align:center;
+  }
+  .level-tag{
+    display:inline-block;
+    font-family:'Orbitron', sans-serif;
+    font-size:11px;
+    letter-spacing:3px;
+    color:var(--gold);
+    background:rgba(255,201,60,0.08);
+    border:1px solid rgba(255,201,60,0.35);
+    padding:4px 14px;
+    clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);
+    margin-bottom:14px;
+  }
+  .name{
+    font-family:'Orbitron', sans-serif;
+    font-weight:900;
+    font-size:34px;
+    letter-spacing:4px;
+    background:linear-gradient(90deg, var(--cyan), var(--violet));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-transform:uppercase;
+  }
+  .title-line{
+    font-size:13px;
+    letter-spacing:3px;
+    color:var(--text-dim);
+    text-transform:uppercase;
+    margin-top:6px;
+  }
+
+  .xpbar-wrap{
+    padding:16px 26px 4px;
+  }
+  .xpbar-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    letter-spacing:2px;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .xpbar{
+    height:8px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--line);
+    clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%);
+    overflow:hidden;
+  }
+  .xpbar .fill{
+    height:100%;
+    width:92%;
+    background:linear-gradient(90deg, var(--cyan), var(--violet));
+    box-shadow:0 0 10px var(--cyan);
+  }
+
+  .stats-title{
+    padding:22px 26px 8px;
+    font-family:'Orbitron', sans-serif;
+    font-size:11px;
+    letter-spacing:3px;
+    color:var(--cyan-dim);
+  }
+
+  .stat-grid{
+    padding:0 26px 8px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .stat-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 14px;
+    background:rgba(255,255,255,0.02);
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent, var(--cyan));
+    clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 8px);
+  }
+  .stat-row .badge{
+    font-family:'Orbitron', sans-serif;
+    font-size:10px;
+    letter-spacing:1px;
+    color:var(--bg);
+    background:var(--accent, var(--cyan));
+    padding:3px 8px;
+    min-width:34px;
+    text-align:center;
+    flex-shrink:0;
+  }
+  .stat-row .role{
+    font-size:15px;
+    font-weight:600;
+    color:var(--text);
+    flex:1;
+  }
+  .stat-row .org{
+    font-size:11px;
+    letter-spacing:1px;
+    color:var(--text-dim);
+  }
+
+  .links{
+    padding:20px 26px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .links-title{
+    font-family:'Orbitron', sans-serif;
+    font-size:11px;
+    letter-spacing:3px;
+    color:var(--cyan-dim);
+    margin-bottom:6px;
+  }
+  .link-btn{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 16px;
+    background:rgba(40,229,255,0.04);
+    border:1px solid var(--line);
+    text-decoration:none;
+    color:var(--text);
+    font-size:13px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .link-btn:hover{
+    border-color:var(--cyan);
+    background:rgba(40,229,255,0.09);
+    transform:translateX(2px);
+  }
+  .link-btn .chev{color:var(--cyan);}
+
+  .footer{
+    padding:12px 26px 18px;
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    letter-spacing:2px;
+    color:var(--text-dim);
+    border-top:1px solid var(--line);
+    font-family:'Orbitron', sans-serif;
+  }
+
+  @media (max-width:420px){
+    .name{font-size:24px; letter-spacing:2px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="edge-glow"></div>
+
+  <div class="topbar">
+    <div class="live"><span class="dot"></span>ONLINE</div>
+    <div class="server">SERVER: GRAND RP // NA-EAST</div>
+  </div>
+
+  <div class="headline">
+    <div class="level-tag">LVL MAX &middot; MULTI-DEPT</div>
+    <div class="name">SHADOW</div>
+    <div class="title-line">Command &middot; Field &middot; Syndicate Operations</div>
+  </div>
+
+  <div class="xpbar-wrap">
+    <div class="xpbar-label"><span>REPUTATION</span><span>92 / 100</span></div>
+    <div class="xpbar"><div class="fill"></div></div>
+  </div>
+
+  <div class="stats-title">CAREER STATS &mdash; EXPERIENCE</div>
+  <div class="stat-grid">
+    <div class="stat-row" style="--accent:var(--gold);"><span class="badge">x1</span><span class="role">Lt. General</span><span class="org">NG</span></div>
+    <div class="stat-row" style="--accent:var(--cyan);"><span class="badge">x2</span><span class="role">Under Sheriff</span><span class="org">SAHP</span></div>
+    <div class="stat-row" style="--accent:var(--cyan);"><span class="badge">x1</span><span class="role">Deputy Chief of Police</span><span class="org">LSPD</span></div>
+    <div class="stat-row" style="--accent:var(--violet);"><span class="badge">EX</span><span class="role">Operations Director</span><span class="org">FIB</span></div>
+    <div class="stat-row" style="--accent:var(--violet);"><span class="badge">EX</span><span class="role">Sr. Executive Staff</span><span class="org">GOV</span></div>
+    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">JR</span><span class="role">ADS Team Junior</span><span class="org">LI</span></div>
+    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">UD</span><span class="role">Under Deputy</span><span class="org">VAGOS</span></div>
+    <div class="stat-row" style="--accent:var(--magenta);"><span class="badge">UD</span><span class="role">Under Deputy</span><span class="org">FAMILIES</span></div>
+  </div>
+
+  <div class="footer">
+    <span>PLAYER ID: SH-0042</span>
+    <span>STATUS: ACTIVE DUTY</span>
+  </div>
+</div>
+
+</body>
+</html>
